@@ -7,16 +7,30 @@ pool:
 steps:
 
 - task: TerraformInstaller@1
+  displayName: Install Terraform
   inputs:
     terraformVersion: 'latest'
 
 - task: AzureCLI@2
+  displayName: Terraform Deployment
   inputs:
     azureSubscription: 'app-hotel-coonection'
     scriptType: 'bash'
     scriptLocation: 'inlineScript'
     inlineScript: |
+
       terraform init
+
       terraform validate
-      terraform plan -var-file="enviroments/dev/terraform.tfvars"
-      terraform apply -auto-approve -var-file="enviroments/dev/terraform.tfvars"
+
+      terraform plan \
+      -var="resource_group_name=app-test-dev-rg" \
+      -var="location=East US" \
+      -var="app_service_plan_name=hotel-dev-plan-01" \
+      -var="app_service_name=milanhotelapp2026"
+
+      terraform apply -auto-approve \
+      -var="resource_group_name=app-test-dev-rg" \
+      -var="location=East US" \
+      -var="app_service_plan_name=hotel-dev-plan-01" \
+      -var="app_service_name=milanhotelapp2026"
