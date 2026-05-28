@@ -24,13 +24,13 @@ steps:
       terraform validate
 
       terraform plan \
-      -var="resource_group_name=hotel-dev-rg-01" \
+      -var="resource_group_name=app-test-dev-rg" \
       -var="location=East US" \
       -var="app_service_plan_name=hotel-dev-plan-01" \
       -var="app_service_name=milanhotelapp2026"
 
       terraform apply -auto-approve \
-      -var="resource_group_name=hotel-dev-rg-01" \
+      -var="resource_group_name=app-test-dev-rg" \
       -var="location=East US" \
       -var="app_service_plan_name=hotel-dev-plan-01" \
       -var="app_service_name=milanhotelapp2026"
