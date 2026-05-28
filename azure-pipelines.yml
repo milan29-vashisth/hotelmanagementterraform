@@ -4,58 +4,33 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-stages:
+steps:
 
-- stage: Terraform_Validate
-  jobs:
-  - job: Validate
-    steps:
+- task: TerraformInstaller@1
+  displayName: Install Terraform
+  inputs:
+    terraformVersion: 'latest'
 
-    - task: TerraformInstaller@1
-      inputs:
-        terraformVersion: latest
+- task: AzureCLI@2
+  displayName: Terraform Deployment
+  inputs:
+    azureSubscription: 'app-hotel-coonection'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
 
-    - task: AzureCLI@2
-      inputs:
-        azureSubscription: 'app-hotel-coonection'
-        scriptType: bash
-        scriptLocation: inlineScript
-        inlineScript: |
-          terraform init
-          terraform validate
+      terraform init
 
-- stage: Terraform_Plan
-  dependsOn: Terraform_Validate
-  jobs:
-  - job: Plan
-    steps:
+      terraform validate
 
-    - task: AzureCLI@2
-      inputs:
-        azureSubscription: 'app-hotel-coonection'
-        scriptType: bash
-        scriptLocation: inlineScript
-        inlineScript: |
-          terraform plan \
-          -var="resource_group_name=app-test-dev-rg" \
-          -var="location=East US" \
-          -var="app_service_plan_name=hotel-dev-plan" \
-          -var="app_service_name=milanhotelapp2026"
+      terraform plan \
+      -var="resource_group_name=hotel-dev-rg-01" \
+      -var="location=East US" \
+      -var="app_service_plan_name=hotel-dev-plan-01" \
+      -var="app_service_name=milanhotelapp2026"
 
-- stage: Terraform_Apply
-  dependsOn: Terraform_Plan
-  jobs:
-  - job: Apply
-    steps:
-
-    - task: AzureCLI@2
-      inputs:
-        azureSubscription: 'app-hotel-coonection'
-        scriptType: bash
-        scriptLocation: inlineScript
-        inlineScript: |
-          terraform apply -auto-approve \
-          -var="resource_group_name=app-test-dev-rg" \
-          -var="location=East US" \
-          -var="app_service_plan_name=hotel-dev-plan" \
-          -var="app_service_name=milanhotelapp2026"
+      terraform apply -auto-approve \
+      -var="resource_group_name=hotel-dev-rg-01" \
+      -var="location=East US" \
+      -var="app_service_plan_name=hotel-dev-plan-01" \
+      -var="app_service_name=milanhotelapp2026"
