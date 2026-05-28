@@ -10,30 +10,13 @@ steps:
   inputs:
     terraformVersion: 'latest'
 
-- task: TerraformTaskV4@4
-  displayName: Terraform Init
+- task: AzureCLI@2
   inputs:
-    provider: 'azurerm'
-    command: 'init'
-
-- task: TerraformTaskV4@4
-  displayName: Terraform Validate
-  inputs:
-    provider: 'azurerm'
-    command: 'validate'
-
-- task: TerraformTaskV4@4
-  displayName: Terraform Plan
-  inputs:
-    provider: 'azurerm'
-    command: 'plan'
-    environmentServiceNameAzureRM: 'app-hotel-coonection'
-    commandOptions: '-var-file=environments/dev/terraform.tfvars'
-
-- task: TerraformTaskV4@4
-  displayName: Terraform Apply
-  inputs:
-    provider: 'azurerm'
-    command: 'apply'
-    environmentServiceNameAzureRM: 'app-hotel-coonection'
-    commandOptions: '-auto-approve -var-file=environments/dev/terraform.tfvars'
+    azureSubscription: 'app-hotel-coonection'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      terraform init
+      terraform validate
+      terraform plan -var-file="environments/dev/terraform.tfvars"
+      terraform apply -auto-approve -var-file="environments/dev/terraform.tfvars"
