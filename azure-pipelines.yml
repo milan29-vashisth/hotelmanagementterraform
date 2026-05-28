@@ -16,7 +16,7 @@ steps:
     provider: 'azurerm'
     command: 'init'
     workingDirectory: '$(System.DefaultWorkingDirectory)'
-    backendServiceArm: 'azure-service-connection'
+    backendServiceArm: 'app-hotel-coonection'
 
 - task: TerraformTaskV4@4
   displayName: Terraform Validate
@@ -29,7 +29,7 @@ steps:
   inputs:
     provider: 'azurerm'
     command: 'plan'
-    environmentServiceNameAzureRM: 'azure-service-connection'
+    environmentServiceNameAzureRM: 'app-hotel-coonection'
     commandOptions: '-var-file=environments/dev/terraform.tfvars'
 
 - task: TerraformTaskV4@4
@@ -37,5 +37,5 @@ steps:
   inputs:
     provider: 'azurerm'
     command: 'apply'
-    environmentServiceNameAzureRM: 'azure-service-connection'
+    environmentServiceNameAzureRM: 'app-hotel-coonection'
     commandOptions: '-auto-approve -var-file=environments/dev/terraform.tfvars'
