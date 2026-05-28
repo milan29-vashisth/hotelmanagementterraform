@@ -18,5 +18,5 @@ steps:
     inlineScript: |
       terraform init
       terraform validate
-      terraform plan -var-file="environments/dev/terraform.tfvars"
-      terraform apply -auto-approve -var-file="environments/dev/terraform.tfvars"
+      terraform plan -var-file="enviroments/dev/terraform.tfvars"
+      terraform apply -auto-approve -var-file="enviroments/dev/terraform.tfvars"
