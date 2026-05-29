@@ -4,45 +4,58 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
+variables:
+  terraformVersion: '1.9.5'
+
 stages:
 
-# =========================
-# TERRAFORM STAGE
-# =========================
-- stage: TerraformDeploy
-  displayName: "Terraform Infrastructure Deployment"
+- stage: Terraform
+  displayName: Terraform Deployment
 
   jobs:
-  - job: DeployInfra
-    displayName: "Deploy App Service Infra"
+  - job: TerraformApply
+    displayName: Terraform Init Plan Apply
 
     steps:
 
-    - checkout: self
-
-    # Install Terraform
     - task: TerraformInstaller@1
-      displayName: "Install Terraform"
       inputs:
-        terraformVersion: 'latest'
+        terraformVersion: $(terraformVersion)
 
-    # Terraform Commands
     - task: AzureCLI@2
-      displayName: "Terraform Init Plan Apply"
-
+      displayName: Terraform Init
       inputs:
         azureSubscription: 'app-hotel-coonection'
         scriptType: bash
         scriptLocation: inlineScript
-
         inlineScript: |
-
-          terraform version
-
           terraform init
 
+    - task: AzureCLI@2
+      displayName: Terraform Validate
+      inputs:
+        azureSubscription: 'app-hotel-coonection'
+        scriptType: bash
+        scriptLocation: inlineScript
+        inlineScript: |
           terraform validate
 
-          terraform plan -var-file="environments/dev/terraform.tfvars"
+    - task: AzureCLI@2
+      displayName: Terraform Plan
+      inputs:
+        azureSubscription: 'app-hotel-coonection'
+        scriptType: bash
+        scriptLocation: inlineScript
+        inlineScript: |
+          terraform plan \
+          -var-file="environments/dev/terraform.tfvars"
 
-          terraform apply -auto-approve -var-file="environments/dev/terraform.tfvars"
+    - task: AzureCLI@2
+      displayName: Terraform Apply
+      inputs:
+        azureSubscription: 'app-hotel-coonection'
+        scriptType: bash
+        scriptLocation: inlineScript
+        inlineScript: |
+          terraform apply -auto-approve \
+          -var-file="environments/dev/terraform.tfvars"
