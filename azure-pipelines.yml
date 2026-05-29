@@ -7,24 +7,26 @@ pool:
 stages:
 
 # =========================
-# TERRAFORM DEPLOYMENT
+# TERRAFORM STAGE
 # =========================
-- stage: Terraform
-  displayName: "Terraform Infra Deployment"
+- stage: TerraformDeploy
+  displayName: "Terraform Infrastructure Deployment"
 
   jobs:
-  - job: TerraformApply
-    displayName: "Create App Service Infra"
+  - job: DeployInfra
+    displayName: "Deploy App Service Infra"
 
     steps:
 
     - checkout: self
 
+    # Install Terraform
     - task: TerraformInstaller@1
       displayName: "Install Terraform"
       inputs:
         terraformVersion: 'latest'
 
+    # Terraform Commands
     - task: AzureCLI@2
       displayName: "Terraform Init Plan Apply"
 
@@ -32,14 +34,15 @@ stages:
         azureSubscription: 'app-hotel-coonection'
         scriptType: bash
         scriptLocation: inlineScript
+
         inlineScript: |
 
-          cd terraform
+          terraform version
 
           terraform init
 
           terraform validate
 
-          terraform plan
+          terraform plan -var-file="environments/dev/terraform.tfvars"
 
-          terraform apply -auto-approve
+          terraform apply -auto-approve -var-file="environments/dev/terraform.tfvars"
