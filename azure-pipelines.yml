@@ -4,33 +4,42 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-steps:
+stages:
 
-- task: TerraformInstaller@1
-  displayName: Install Terraform
-  inputs:
-    terraformVersion: 'latest'
+# =========================
+# TERRAFORM DEPLOYMENT
+# =========================
+- stage: Terraform
+  displayName: "Terraform Infra Deployment"
 
-- task: AzureCLI@2
-  displayName: Terraform Deployment
-  inputs:
-    azureSubscription: 'app-hotel-coonection'
-    scriptType: 'bash'
-    scriptLocation: 'inlineScript'
-    inlineScript: |
+  jobs:
+  - job: TerraformApply
+    displayName: "Create App Service Infra"
 
-      terraform init
+    steps:
 
-      terraform validate
+    - checkout: self
 
-      terraform plan \
-      -var="resource_group_name=hotel-dev-rg-new01" \
-      -var="location=East US" \
-      -var="app_service_plan_name=hotel-dev-plan-01" \
-      -var="app_service_name=milanhotelapp2026"
+    - task: TerraformInstaller@1
+      displayName: "Install Terraform"
+      inputs:
+        terraformVersion: 'latest'
 
-      terraform apply -auto-approve \
-      -var="resource_group_name=hotel-dev-rg-new01" \
-      -var="location=East US" \
-      -var="app_service_plan_name=hotel-dev-plan-01" \
-      -var="app_service_name=milanhotelapp2026"
+    - task: AzureCLI@2
+      displayName: "Terraform Init Plan Apply"
+
+      inputs:
+        azureSubscription: 'app-hotel-coonection'
+        scriptType: bash
+        scriptLocation: inlineScript
+        inlineScript: |
+
+          cd terraform
+
+          terraform init
+
+          terraform validate
+
+          terraform plan
+
+          terraform apply -auto-approve
