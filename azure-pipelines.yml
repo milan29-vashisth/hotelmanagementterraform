@@ -18,44 +18,62 @@ stages:
 
     steps:
 
+    # Install Terraform
     - task: TerraformInstaller@1
+      displayName: Install Terraform
       inputs:
         terraformVersion: $(terraformVersion)
 
-    - task: AzureCLI@2
+    # Terraform Init
+    - task: TerraformTaskV4@4
       displayName: Terraform Init
       inputs:
-        azureSubscription: 'app-hotel-coonection'
-        scriptType: bash
-        scriptLocation: inlineScript
-        inlineScript: |
-          terraform init
+        provider: 'azurerm'
+        command: 'init'
 
-    - task: AzureCLI@2
+        # Azure DevOps Service Connection
+        backendServiceArm: 'app-hotel-coonection'
+
+        # Backend Configuration
+        backendAzureRmResourceGroupName: 'tfstate-rg-milan'
+        backendAzureRmStorageAccountName: 'milantfstate2026'
+        backendAzureRmContainerName: 'tfstate'
+        backendAzureRmKey: 'hotel-dev.tfstate'
+
+        workingDirectory: '$(System.DefaultWorkingDirectory)'
+
+    # Terraform Validate
+    - task: TerraformTaskV4@4
       displayName: Terraform Validate
       inputs:
-        azureSubscription: 'app-hotel-coonection'
-        scriptType: bash
-        scriptLocation: inlineScript
-        inlineScript: |
-          terraform validate
+        provider: 'azurerm'
+        command: 'validate'
+        workingDirectory: '$(System.DefaultWorkingDirectory)'
 
-    - task: AzureCLI@2
+    # Terraform Plan
+    - task: TerraformTaskV4@4
       displayName: Terraform Plan
       inputs:
-        azureSubscription: 'app-hotel-coonection'
-        scriptType: bash
-        scriptLocation: inlineScript
-        inlineScript: |
-          terraform plan \
-          -var-file="environments/dev/terraform.tfvars"
+        provider: 'azurerm'
+        command: 'plan'
 
-    - task: AzureCLI@2
+        environmentServiceNameAzureRM: 'app-hotel-coonection'
+
+        commandOptions: >
+          -var-file=environments/dev/terraform.tfvars
+
+        workingDirectory: '$(System.DefaultWorkingDirectory)'
+
+    # Terraform Apply
+    - task: TerraformTaskV4@4
       displayName: Terraform Apply
       inputs:
-        azureSubscription: 'app-hotel-coonection'
-        scriptType: bash
-        scriptLocation: inlineScript
-        inlineScript: |
-          terraform apply -auto-approve \
-          -var-file="environments/dev/terraform.tfvars"
+        provider: 'azurerm'
+        command: 'apply'
+
+        environmentServiceNameAzureRM: 'app-hotel-coonection'
+
+        commandOptions: >
+          -auto-approve
+          -var-file=environments/dev/terraform.tfvars
+        workingDirectory: '$(System.DefaultWorkingDirectory)'
