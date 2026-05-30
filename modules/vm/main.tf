@@ -42,6 +42,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
   admin_password = var.admin_password
 
   disable_password_authentication = false
+  custom_data = base64encode(file("${path.module}/bootstrap.sh"))
 
   network_interface_ids = [
     azurerm_network_interface.nic.id
