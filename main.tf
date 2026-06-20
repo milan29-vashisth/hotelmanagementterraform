@@ -31,10 +31,10 @@ module "vm" {
   admin_password      = var.admin_password
    depends_on = [azurerm_resource_group.rg]
 }
-module "aks" {
-  source              = "./modules/aks"
-  aks_name            = var.aks_name
-  location            = var.location
-  resource_group_name = azurerm_resource_group.rg.name
-  dns_prefix          = "hotelaks"
-}
+# module "aks" {
+#   source              = "./modules/aks"
+#   aks_name            = var.aks_name
+#   location            = var.location
+#   resource_group_name = azurerm_resource_group.rg.name
+#   dns_prefix          = "hotelaks"
+# }
