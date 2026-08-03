@@ -13,3 +13,6 @@ variable "resource_group_name" {
 variable "tenant_id" {
   type = string
 }
+variable "object_id" {
+  type = string
+}
