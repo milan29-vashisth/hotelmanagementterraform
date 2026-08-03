@@ -16,3 +16,6 @@ output "keyvault_name" {
 output "keyvault_id" {
   value = module.keyvault.keyvault_id
 }
+output "current_object_id" {
+  value = data.azurerm_client_config.current.object_id
+}
