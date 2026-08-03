@@ -9,3 +9,10 @@ output "acr_login_server" {
 output "vm_public_ip" {
   value = module.vm.vm_public_ip
 }
+output "keyvault_name" {
+  value = module.keyvault.keyvault_name
+}
+
+output "keyvault_id" {
+  value = module.keyvault.keyvault_id
+}
