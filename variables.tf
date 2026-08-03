@@ -7,4 +7,3 @@ variable "vm_name" {}
 variable "admin_username" {}
 variable "admin_password" {}
 variable "aks_name" {}
-variable "object_id" {}

@@ -9,8 +9,8 @@ module "appservice" {
   location              = var.location
   app_service_plan_name = var.app_service_plan_name
   app_service_name      = var.app_service_name
-   depends_on = [azurerm_resource_group.rg]
-  
+  depends_on            = [azurerm_resource_group.rg]
+
 }
 
 module "acr" {
@@ -19,7 +19,7 @@ module "acr" {
   resource_group_name = azurerm_resource_group.rg.name
   location            = var.location
   acr_name            = var.acr_name
-   depends_on = [azurerm_resource_group.rg]
+  depends_on          = [azurerm_resource_group.rg]
 }
 
 module "vm" {
@@ -29,7 +29,7 @@ module "vm" {
   vm_name             = var.vm_name
   admin_username      = var.admin_username
   admin_password      = var.admin_password
-   depends_on = [azurerm_resource_group.rg]
+  depends_on          = [azurerm_resource_group.rg]
 }
 module "aks" {
   source              = "./modules/aks"
@@ -42,10 +42,10 @@ data "azurerm_client_config" "current" {}
 module "keyvault" {
   source = "./modules/keyvault"
 
-  keyvault_name      = "milankv2026demo"
-  location           = var.location
+  keyvault_name       = "milankv2026demo"
+  location            = var.location
   resource_group_name = var.resource_group_name
-  tenant_id          = data.azurerm_client_config.current.tenant_id
+  tenant_id           = data.azurerm_client_config.current.tenant_id
   object_id           = data.azurerm_client_config.current.object_id
 
 }
