@@ -38,6 +38,7 @@ module "aks" {
   resource_group_name = azurerm_resource_group.rg.name
   dns_prefix          = "hotelaks"
 }
+data "azurerm_client_config" "current" {}
 module "keyvault" {
   source = "./modules/keyvault"
 
