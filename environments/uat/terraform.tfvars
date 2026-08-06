@@ -1,0 +1,5 @@
+resource_group_name = "app-test-uat-rg"
+location            = "East US 2"
+aks_name            = "hotel-aks-uat"
+acr_name            = "milanacruat"
+keyvault_name       = "milankv-uat"

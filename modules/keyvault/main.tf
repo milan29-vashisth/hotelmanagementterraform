@@ -26,7 +26,7 @@ resource "azurerm_key_vault_secret" "db_password" {
   name         = "db-password"
   value        = "MySecret123"
   key_vault_id = azurerm_key_vault.kv.id
- 
+
   depends_on = [
     azurerm_key_vault.kv
   ]

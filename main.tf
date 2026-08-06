@@ -1,6 +1,6 @@
 resource "azurerm_resource_group" "rg" {
-  name     = "app-test-dev-rg"
-  location = "East US 2"
+  name     = var.resource_group_name
+  location = var.location
 }
 module "appservice" {
   source = "./modules/appservice"
@@ -36,13 +36,13 @@ module "aks" {
   aks_name            = var.aks_name
   location            = var.location
   resource_group_name = azurerm_resource_group.rg.name
-  dns_prefix          = "hotelaks"
+  dns_prefix          = "${var.aks_name}-dns"
 }
 data "azurerm_client_config" "current" {}
 module "keyvault" {
   source = "./modules/keyvault"
 
-  keyvault_name       = "milankv2026demo"
+  keyvault_name       = var.keyvault_name
   location            = var.location
   resource_group_name = var.resource_group_name
   tenant_id           = data.azurerm_client_config.current.tenant_id

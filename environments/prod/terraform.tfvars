@@ -1,0 +1,5 @@
+resource_group_name = "app-test-prod-rg"
+location            = "East US 2"
+aks_name            = "hotel-aks-prod"
+acr_name            = "milanacrprod"
+keyvault_name       = "milankv-prod"
