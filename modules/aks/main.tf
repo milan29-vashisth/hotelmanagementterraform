@@ -4,7 +4,9 @@ resource "azurerm_kubernetes_cluster" "aks" {
   resource_group_name = var.resource_group_name
   dns_prefix          = var.dns_prefix
   oidc_issuer_enabled = true
-
+  key_vault_secrets_provider {
+    secret_rotation_enabled = true
+  }
   default_node_pool {
     name       = "system"
     node_count = 1
